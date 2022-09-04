@@ -1,0 +1,45 @@
+1-1、解压hive到指定目录 tar -xf
+1-2、.bashrc设置环境变量
+export HIVE_HOME=/usr/local/hive
+export PATH=$PATH:$HIVE_HOME/bin
+
+
+配置文件：/usr/local/hive/conf
+hive-site.xml mysql存储hive元数据，而不是hive自带的derby
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true</value>
+    <description>JDBC connect string for a JDBC metastore</description>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>com.mysql.jdbc.Driver</value>
+    <description>Driver class name for a JDBC metastore</description>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>hive</value>
+    <description>username to use against metastore database</description>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>hive</value>
+    <description>password to use against metastore database</description>
+  </property>
+</configuration>
+
+
+hive是基于hadoop的数据仓库,会把用户的查询语句自动转换为mr任务进行执行。故先启动hadoop
+启动hadoop(hadoop/sbin namenode datanode secondnamenode)
+./start-dfs.sh
+启动hive(hive/bin)
+./hive
+
+
+数据类型：
+基本数据类型：tinyint smallint int float double boolean string timestamp binary
+集合数据类型：array map struct
