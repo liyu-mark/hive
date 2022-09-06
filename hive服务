@@ -1,0 +1,64 @@
+一：hive --help
+
+hadoop@dblab-VirtualBox:/usr/local$ hive --help
+Usage ./hive <parameters> --service serviceName <service parameters>
+Service List: beeline cleardanglingscratchdir cli hbaseimport hbaseschematool help hiveburninclient hiveserver2 hplsql hwi jar lineage llapdump llap llapstatus metastore metatool orcfiledump rcfilecat schemaTool version
+Parameters parsed:
+  --auxpath : Auxillary jars
+  --config : Hive configuration directory
+  --service : Starts specific service/component. cli is default
+Parameters used:
+  HADOOP_HOME or HADOOP_PREFIX : Hadoop install directory
+  HIVE_OPT : Hive options
+For help on a particular service:
+  ./hive --service serviceName --help
+Debug help:  ./hive --debug --help
+
+Service List 常见的服务
+
+二：hive --help --service cli
+hadoop@dblab-VirtualBox:/usr/local$ hive --help --service cli
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/local/hive/lib/log4j-slf4j-impl-2.4.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/local/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+usage: hive
+ -d,--define <key=value>          Variable subsitution to apply to hive
+                                  commands. e.g. -d A=B or --define A=B
+    --database <databasename>     Specify the database to use
+ -e <quoted-query-string>         SQL from command line
+ -f <filename>                    SQL from files
+ -H,--help                        Print help information
+    --hiveconf <property=value>   Use value for given property
+    --hivevar <key=value>         Variable subsitution to apply to hive
+                                  commands. e.g. --hivevar A=B
+ -i <filename>                    Initialization SQL file
+ -S,--silent                      Silent mode in interactive shell
+ -v,--verbose                     Verbose mode (echo executed SQL to the
+
+变量：
+--define === --hivevar
+hive有4种变量
+hivevar 用户自定义变量
+hiveconf hive配置文件
+system java环境变量
+env    shell环境变量
+
+
+
+set 查看/修改
+hive -d foo=bar;
+hivevar foo=bar2;
+查询语句中的变量会被替换后才会提交给查询处理器。  ${hivevar:foo} == ${foo}
+
+一次性查询退出
+hive -e "select * from toss1" > /tmp/mysquery  标准输出-本地路径 参数 -S 不会输出OK,Time taken
+查询技巧
+hive -S -e "set" | grep warehouse
+
+hive -f 文件路径
+hive>source 文件路径
+前面加!执行bash命令
+
+.hiverc cli启动前，自动执行这个文件。

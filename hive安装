@@ -5,7 +5,8 @@ export PATH=$PATH:$HIVE_HOME/bin
 
 
 配置文件：/usr/local/hive/conf
-hive-site.xml mysql存储hive元数据，而不是hive自带的derby
+hive-site.xml mysql存储hive元数据，而不是hive自带的derby,元数据包括表的模式和分区信息等元数据
+用户在执行create or alter等语句需要使用，多用户和系统需要并发访问元数据。默认的数据库并不适用生产环境
 
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
@@ -43,3 +44,4 @@ hive是基于hadoop的数据仓库,会把用户的查询语句自动转换为mr�
 数据类型：
 基本数据类型：tinyint smallint int float double boolean string timestamp binary
 集合数据类型：array map struct
+
