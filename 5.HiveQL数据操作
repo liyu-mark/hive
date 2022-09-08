@@ -1,0 +1,3 @@
+load data local inpath '${env:HOME}/california-employees'
+overwrite into table employees
+partition (country = 'US',state = 'CA');

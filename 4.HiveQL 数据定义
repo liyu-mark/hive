@@ -1,0 +1,14 @@
+分区表：
+create table employees(
+name string,
+salary float,
+address struct<state:string>
+)
+partitioned by (country string,state string);
+
+如果表中的数据以及分区个数都很大的话，执行这样一个包含全部查询可能会触发一个巨大的MR任务。
+安全措施是将hive设置为strict模式。如果对分区表进行查询而where子句没有加过滤的话，禁止提交这个任务。
+show partitions employees;
+describe extended employees;
+
+还是和你说声对不起吧。

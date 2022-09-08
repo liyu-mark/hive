@@ -1,0 +1,39 @@
+1、提高聚合效率 会触发map阶段进行的顶级聚合过程。非顶级的聚合过程将会在执行一个group by后进行
+    set hive.map.aggr=true;
+2、无需使用mr任务 读取存储目录下的文件，where后为分区字段
+    set hive.exec.mode.local.auto=true;
+3、explain/explain extended 抽象语法树
+4、限制调整,group by join 聚合操作差异
+    hive.limit.optimize.enable=false
+    下面2个控制上面一个
+    hive.limit.row.max.size=100000
+    hive.limit.optimize.limit.file=10
+5、并行执行
+    有些阶段并非完全互相依赖，提高集群利用率。 hive.exec.parallel
+6、严格模式
+hive.mapred.mode=strict 禁止3中类型的查询
+    分区表加分区字段过滤条件
+    group by 必须加limit
+    限制笛卡尔积，join on (关系型数据库库 join where 会转换为 join on)
+7、调整mapper,reducer个数
+    hive.exec.reducers.bytes.per.reducer 来设置reducer的大小，
+    hive是按照输入的数据量大小来确定reducer个数的。我们通过dfs -count 命令来计算输入量的大小。
+    mapred.reduce.tasks来设置个数，默认是3
+8、jvm重用(hadoop调参内容)
+   适用场景：小文件或task特别多，这类场景大部分执行时间都很短
+   hadoop默认配置通常是使用派生jvm来执行map、reduce任务。jvm的启动过程会造成相当大的开销，
+   jvm重用可以使得jvm实例在同一个job中重新调用n次
+   mapred.job.reuse.jvm.num.tasks
+9、推测执行
+   触发执行一些重复的任务，通过加快获取单个task的结果，将执行慢的TaskTracker加入到黑名单的方式来提高整体的任务执行效率
+   hive.mapred.reduce.tasks.speculative.execution
+10、将多个group by操作组装到单个mapreduce任务中
+    hive.multigroupby.singlereducer
+
+
+动态分区插入：
+    insert overwrite table employees
+    partition(country,state)
+    select ...,se.city,se.st
+    from stage_employees se;
+    根据最后2列来确定分区字段，静态分区键必须在动态分区键之前。
